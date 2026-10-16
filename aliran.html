@@ -1,0 +1,407 @@
+<!doctype html>
+<html lang="ms">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>:root{color-scheme:light}body{margin:0;font-size:14px}[hidden]{display:none!important}img{max-width:100%}</style>
+<title>Aliran Kerja AJK Peperiksaan</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: satu tulang belakang menegak (spine) dengan fasa bertarikh; kad tugas AJK di setiap fasa; bengkel dipecah kepada tiga lorong. */
+:root{
+  --bg:#F2F4F7; --surface:#FFFFFF; --ink:#13202C; --muted:#5A6978; --line:#CBD3DC;
+  --accent:#34328A; --accent-soft:#E6E6F6; --warn:#A8620A; --warn-soft:#FBEFD9;
+  --ok:#23704F; --ok-soft:#DDF0E6; --dim:#8794A2;
+  --f-display:"Archivo","Segoe UI",system-ui,sans-serif;
+  --f-body:"IBM Plex Sans","Segoe UI",system-ui,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0F161D; --surface:#17212B; --ink:#E8EDF2; --muted:#9AA8B6; --line:#2C3A47;
+  --accent:#A9A7F2; --accent-soft:#25244A; --warn:#E9B25E; --warn-soft:#3A2B10;
+  --ok:#6FCB9F; --ok-soft:#14352A; --dim:#6C7A88; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0F161D; --surface:#17212B; --ink:#E8EDF2; --muted:#9AA8B6; --line:#2C3A47;
+  --accent:#A9A7F2; --accent-soft:#25244A; --warn:#E9B25E; --warn-soft:#3A2B10;
+  --ok:#6FCB9F; --ok-soft:#14352A; --dim:#6C7A88; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.55;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:28px 56px}
+.wrap{max-width:880px;margin:0 auto;display:flex;flex-direction:column;gap:28px}
+h1,h2,h3{font-family:var(--f-display);margin:0;text-wrap:balance;line-height:1.15}
+h1{font-size:clamp(26px,5vw,38px);font-weight:800;letter-spacing:-.01em}
+h2{font-size:20px;font-weight:700}
+h3{font-size:16px;font-weight:700}
+p{margin:0}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+
+/* header */
+header{display:flex;flex-direction:column;gap:12px}
+.meta{display:flex;flex-wrap:wrap;gap:8px 20px;color:var(--muted);font-size:14px}
+.meta b{color:var(--ink);font-weight:600}
+.banner{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;background:var(--accent);color:#fff;border-radius:6px;padding:14px 16px}
+:root[data-theme="dark"] .banner{color:#0F161D}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .banner{color:#0F161D}}
+.banner .big{font-family:var(--f-display);font-weight:800;font-size:22px}
+.banner .sm{font-size:14px;opacity:.92}
+
+/* flow */
+.flow{display:flex;flex-direction:column}
+.stage{display:grid;grid-template-columns:128px 1fr;gap:0 18px;position:relative;padding-bottom:22px}
+.stage:last-child{padding-bottom:0}
+.when{text-align:right;padding-top:14px;display:flex;flex-direction:column;gap:2px;align-items:flex-end}
+.when .d{font-family:var(--f-mono);font-weight:600;font-size:14px}
+.when .w{font-size:12px;color:var(--muted)}
+.rail{position:absolute;left:146px;top:0;bottom:0;width:2px;background:var(--line)}
+.stage:last-child .rail{bottom:auto;height:24px}
+.dot{position:absolute;left:140px;top:18px;width:14px;height:14px;border-radius:50%;background:var(--surface);border:3px solid var(--dim)}
+.card{margin-left:24px;background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:14px 16px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.card h3 .tag{font-family:var(--f-mono);font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:2px 7px;border-radius:3px;margin-left:8px;vertical-align:2px}
+.who{font-size:13px;color:var(--muted)}
+.who b{color:var(--ink)}
+
+.is-done .card{opacity:.72}
+.is-done .dot{border-color:var(--ok);background:var(--ok)}
+.is-done .tag{background:var(--ok-soft);color:var(--ok)}
+.is-now .card{border:2px solid var(--accent)}
+.is-now .dot{border-color:var(--accent);background:var(--accent);box-shadow:0 0 0 5px var(--accent-soft)}
+.is-now .tag{background:var(--accent);color:#fff}
+:root[data-theme="dark"] .is-now .tag{color:#0F161D}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .is-now .tag{color:#0F161D}}
+.is-next .dot{border-color:var(--accent)}
+.is-next .tag{background:var(--accent-soft);color:var(--accent)}
+.is-unsure .card{border-style:dashed}
+.is-unsure .dot{border-color:var(--warn)}
+.is-unsure .tag{background:var(--warn-soft);color:var(--warn)}
+
+.ajk{background:var(--accent-soft);border-radius:4px;padding:10px 12px;display:flex;flex-direction:column;gap:4px}
+.ajk .eyebrow{color:var(--accent)}
+.ajk ul{margin:0;padding-left:18px}
+.is-unsure .ajk{background:var(--warn-soft)}
+.is-unsure .ajk .eyebrow{color:var(--warn)}
+
+/* decision */
+.decision{display:flex;flex-direction:column;gap:10px}
+.dq{display:flex;gap:12px;align-items:center}
+.diamond{flex:none;width:34px;height:34px;position:relative}
+.diamond::before{content:"";position:absolute;inset:5px;background:var(--warn);transform:rotate(45deg);border-radius:2px}
+.diamond::after{content:"?";position:absolute;inset:0;display:grid;place-items:center;color:#fff;font-family:var(--f-display);font-weight:800;font-size:15px}
+:root[data-theme="dark"] .diamond::after{color:#0F161D}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .diamond::after{color:#0F161D}}
+.branches{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.br{border:1px solid var(--line);border-radius:4px;padding:8px 10px;font-size:13.5px;min-width:0}
+.br b{font-family:var(--f-mono);font-size:12px;letter-spacing:.06em;display:block;margin-bottom:2px}
+.br.no b{color:var(--warn)} .br.yes b{color:var(--ok)}
+
+/* workshop lanes */
+.lanes{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.lane{border:1px solid var(--line);border-radius:4px;padding:10px 12px;display:flex;flex-direction:column;gap:4px;min-width:0;font-size:13.5px}
+.lane .eyebrow{color:var(--accent)}
+.arrow{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:13px}
+.arrow svg{flex:none}
+.items{margin:0;padding:0;list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.items li{display:flex;gap:8px;align-items:flex-start;border:1px solid var(--line);border-radius:4px;padding:8px 10px;font-size:13.5px;min-width:0}
+.items .n{font-family:var(--f-mono);font-weight:600;color:var(--accent);flex:none}
+
+/* checklist */
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:18px;display:flex;flex-direction:column;gap:14px}
+.pick{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center}
+.pick label{font-weight:600}
+select{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:4px;padding:8px 10px;max-width:100%;min-width:0}
+select:focus-visible,input:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.courses{display:flex;flex-direction:column;gap:10px}
+.course{border:1px solid var(--line);border-radius:4px;padding:12px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.course .top{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:baseline}
+.code{font-family:var(--f-mono);font-weight:600;color:var(--accent)}
+.roles{display:grid;grid-template-columns:repeat(3,1fr);gap:6px 14px;font-size:13px;color:var(--muted)}
+.roles span{min-width:0}
+.roles b{display:block;color:var(--ink);font-weight:500}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.steps label{display:flex;gap:8px;align-items:flex-start;font-size:13px;border:1px solid var(--line);border-radius:4px;padding:7px 9px;cursor:pointer;min-width:0}
+.steps input{margin-top:3px;accent-color:var(--accent);flex:none}
+.steps label:has(input:checked){background:var(--ok-soft);border-color:var(--ok)}
+.prog{font-family:var(--f-mono);font-size:12px;color:var(--muted)}
+.note{font-size:13px;color:var(--muted)}
+
+.verify{background:var(--warn-soft);border-radius:6px;padding:16px 18px;display:flex;flex-direction:column;gap:8px}
+.verify h2{color:var(--warn)}
+.verify ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px}
+
+@media (max-width:640px){
+  .stage{grid-template-columns:1fr}
+  .when{text-align:left;align-items:flex-start;flex-direction:row;gap:10px;padding:0 0 6px 28px;align-items:baseline}
+  .rail{left:6px}
+  .dot{left:0;top:2px}
+  .card{margin-left:28px}
+  .lanes,.steps,.items,.roles{grid-template-columns:1fr}
+  .branches{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion:no-preference){.card{transition:border-color .2s}}
+</style>
+</head>
+<body>
+
+
+<div class="wrap">
+<header>
+  <span class="eyebrow">Jawatankuasa Pengurusan Peperiksaan · FKK</span>
+  <h1>Aliran Kerja AJK: Bengkel Peperiksaan Akhir Jan 2027</h1>
+  <div class="meta">
+    <span><b>Bengkel:</b> Rabu–Jumaat, 21–23 Okt 2026</span>
+    <span><b>Tempat:</b> FKK Aras 20, Menara 2</span>
+    <span><b>Sumber tarikh:</b> bengkel dikemas kini 16 Okt 2026; tarikh lain ikut emel ralat 28 Sep 2026</span>
+  </div>
+  <div class="banner" id="banner">
+    <span class="big" id="bn-big">Bengkel dalam 5 hari</span>
+    <span class="sm" id="bn-sm">Fasa semasa: Author membuat pembetulan (15–20 Okt)</span>
+  </div>
+</header>
+
+<section aria-labelledby="h-flow" style="display:flex;flex-direction:column;gap:16px">
+  <h2 id="h-flow">Carta alir dan tarikh penting</h2>
+  <p class="note">Tugas AJK: pastikan Author muat naik soalan, Vetter menyemak, dan Resource Person (RP) menghantar kertas akhir bagi kursus yang anda pantau. Kotak biru ialah tindakan khusus untuk AJK.</p>
+
+  <div class="flow" id="flow">
+
+    <div class="stage is-done" data-start="2026-09-19" data-end="2026-10-11">
+      <div class="when"><span class="d">19 Sep – 11 Okt</span><span class="w">Minggu 1–2</span></div>
+      <div class="rail"></div><div class="dot"></div>
+      <div class="card">
+        <h3>Author sediakan soalan <span class="tag"></span></h3>
+        <p>Sediakan sekurang-kurangnya 2 SET soalan lengkap dengan skema jawapan guna template semasa, dan muat naik ke EDUPKK.</p>
+        <p class="who"><b>Author</b></p>
+      </div>
+    </div>
+
+    <div class="stage is-done" data-start="2026-10-12" data-end="2026-10-14">
+      <div class="when"><span class="d">12 – 14 Okt</span><span class="w">Minggu 3</span></div>
+      <div class="rail"></div><div class="dot"></div>
+      <div class="card">
+        <h3>Vetter semak dan beri ulasan <span class="tag"></span></h3>
+        <p>Semak berpandukan Active JSU di AIMS, kemudian beri komen kepada Author.</p>
+        <p class="who"><b>Vetter</b></p>
+      </div>
+    </div>
+
+    <div class="stage is-now" data-start="2026-10-15" data-end="2026-10-20">
+      <div class="when"><span class="d">15 – 20 Okt</span><span class="w">Minggu 3–4</span></div>
+      <div class="rail"></div><div class="dot"></div>
+      <div class="card">
+        <h3>Author membuat pembetulan <span class="tag"></span></h3>
+        <p>Betulkan soalan berdasarkan komen vetter sehingga semua soalan diluluskan vetter.</p>
+        <p class="who"><b>Author</b> membetulkan · <b>Vetter</b> menyemak semula</p>
+        <div class="decision">
+          <div class="dq"><span class="diamond"></span><b>Semua soalan sudah diluluskan vetter?</b></div>
+          <div class="branches">
+            <div class="br no"><b>TIDAK</b>Author betulkan lagi, Vetter semak semula. Ulang sehingga lulus.</div>
+            <div class="br yes"><b>YA</b>Teruskan ke fasa RP (20 Okt).</div>
+          </div>
+        </div>
+        <div class="ajk">
+          <span class="eyebrow">Tugas AJK</span>
+          <ul>
+            <li>Semak status setiap kursus anda: sudah lulus vetter atau belum.</li>
+            <li>Ingatkan Author dan Vetter yang belum bergerak.</li>
+            <li>Sasaran: semua lulus sebelum 20 Okt supaya RP boleh mula.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="stage is-next" data-start="2026-10-20" data-end="2026-10-21">
+      <div class="when"><span class="d">20 – 21 Okt</span><span class="w">Minggu 4</span></div>
+      <div class="rail"></div><div class="dot"></div>
+      <div class="card">
+        <h3>RP pilih set dan kemas kini kertas <span class="tag"></span></h3>
+        <p>Pilih satu (1) SET sahaja. Semak dan kemas kini kertas yang dijana: muka surat, PO, CO dan cognitive level.</p>
+        <p class="who"><b>Resource Person</b></p>
+        <div class="ajk">
+          <span class="eyebrow">Tugas AJK</span>
+          <ul>
+            <li>Sahkan RP sudah pilih 1 set dan kertas sedia dicetak.</li>
+            <li>Pastikan RP dan Vetter kursus anda boleh hadir pada 21, 22 atau 23 Okt.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="stage is-next" data-start="2026-10-21" data-end="2026-10-23">
+      <div class="when"><span class="d">21 – 23 Okt</span><span class="w">Rabu–Jumaat · Minggu 4</span></div>
+      <div class="rail"></div><div class="dot"></div>
+      <div class="card">
+        <h3>Hari bengkel <span class="tag"></span></h3>
+        <p class="who">FKK Aras 20, Menara 2. Ketiga-tiga pihak hadir untuk setiap kursus.</p>
+        <div class="lanes">
+          <div class="lane"><span class="eyebrow">Vetter</span>Hadir, semak setiap soalan yang dicetak RP, dan tandatangani Borang Penyerahan Kertas Soalan (Produk Pelanggan) Semakan L.</div>
+          <div class="lane"><span class="eyebrow">Resource Person</span>Hadir, cetak set soalan, dan dapatkan pengesahan serta tandatangan vetter.</div>
+          <div class="lane"><span class="eyebrow">AJK</span>Pantau kehadiran dan semak empat item lengkap sebelum RP menghantar.</div>
+        </div>
+        <div class="arrow">
+          <svg width="16" height="22" viewBox="0 0 16 22" aria-hidden="true"><path d="M8 0v18M2 12l6 7 6-7" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+          RP hantar ke Pejabat Akademik FKK, Aras 20, Menara 2
+        </div>
+        <ul class="items">
+          <li><span class="n">1</span>Set soalan lengkap (softcopy dan hardcopy)</li>
+          <li><span class="n">2</span>Skema jawapan (softcopy dan hardcopy)</li>
+          <li><span class="n">3</span>Borang Pengakuan Staf (Semakan L), ditandatangani semua penyedia soalan</li>
+          <li><span class="n">4</span>Borang Produk Pelanggan (Semakan L), ditandatangani penyedia, RP dan vetter</li>
+        </ul>
+        <div class="ajk">
+          <span class="eyebrow">Tugas AJK</span>
+          <ul><li>Tarikh akhir penghantaran kertas ke BPPA ialah 21–23 Okt (dahulu 27–28 Okt). Pastikan tiada kursus tertinggal.</li></ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="stage is-unsure" data-start="2026-10-23" data-end="2026-10-26">
+      <div class="when"><span class="d">23 – 26 Okt</span><span class="w">Perlu disahkan</span></div>
+      <div class="rail"></div><div class="dot"></div>
+      <div class="card">
+        <h3>Borang selepas bengkel <span class="tag"></span></h3>
+        <p>Tarikh ini datang daripada emel 27 Sep dan tidak disebut dalam emel ralat.</p>
+        <ul style="margin:0;padding-left:18px">
+          <li>Author maklumkan RP semua soalan lulus, dan serah Borang Pengakuan Staf serta Borang Produk Pelanggan kepada RP.</li>
+          <li>Vetter muat naik Final Exam Correction Form (Form 1), Guidelines and Checklists for Vetter (Form 2) dan Vetter's Comment Form (Form 3) di Google Site EDU PKK.</li>
+        </ul>
+        <div class="ajk">
+          <span class="eyebrow">Tugas AJK</span>
+          <ul><li>Tanya Dr Sakinah sama ada tarikh ini masih terpakai sebelum memaklumkan kepada Author dan Vetter.</li></ul>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section class="panel" aria-labelledby="h-chk">
+  <h2 id="h-chk">Senarai semak kursus anda</h2>
+  <div class="pick">
+    <label for="sel">AJK</label>
+    <select id="sel"></select>
+  </div>
+  <div class="courses" id="courses"></div>
+  <p class="note">Tandaan disimpan pada pelayar ini sahaja dan tidak dikongsi dengan AJK lain.</p>
+</section>
+
+<section class="verify" aria-labelledby="h-v">
+  <h2 id="h-v">Perkara untuk disahkan dengan Dr Sakinah</h2>
+  <ul>
+    <li>Bengkel kini 21–23 Okt, tetapi tarikh Author (15–20 Okt) dan RP (20–21 Okt) belum dikemas kini. RP bertindih dengan hari pertama bengkel pada 21 Okt.</li>
+    <li>Emel 18 Sep menyebut sistem QBS, manakala emel 27 Sep menyebut EDUPKK untuk muat naik soalan dan skema jawapan.</li>
+    <li>Tarikh 23–26 Okt (borang Author dan Vetter) belum dinyatakan semula dalam emel ralat.</li>
+  </ul>
+</section>
+</div>
+
+<script>
+(function(){
+  var TAGS={done:"Selesai",now:"Sekarang",next:"Akan datang",unsure:"Sahkan"};
+  var WS=new Date(2026,9,21);
+  function dayStart(d){return new Date(d.getFullYear(),d.getMonth(),d.getDate())}
+  function parse(s){var p=s.split("-");return new Date(+p[0],+p[1]-1,+p[2])}
+  var today=dayStart(new Date());
+
+  // status ikut tarikh
+  var stages=document.querySelectorAll(".stage");
+  var current=null;
+  stages.forEach(function(el){
+    var s=parse(el.dataset.start),e=parse(el.dataset.end);
+    var unsure=el.classList.contains("is-unsure");
+    var st;
+    if(unsure) st="unsure";
+    else if(today>e) st="done";
+    else if(today>=s) st="now";
+    else st="next";
+    ["is-done","is-now","is-next","is-unsure"].forEach(function(c){el.classList.remove(c)});
+    el.classList.add("is-"+st);
+    var tag=el.querySelector(".tag"); if(tag) tag.textContent=TAGS[st];
+    if(st==="now"&&!current) current=el;
+  });
+  // jika dua fasa serentak (cth. 20 Okt), kekalkan yang pertama sebagai "sekarang"
+  var seenNow=false;
+  stages.forEach(function(el){
+    if(el.classList.contains("is-now")){ if(seenNow){el.classList.remove("is-now");el.classList.add("is-next");el.querySelector(".tag").textContent=TAGS.next} seenNow=true; }
+  });
+
+  var diff=Math.round((WS-today)/86400000);
+  var big=document.getElementById("bn-big"),sm=document.getElementById("bn-sm");
+  if(diff>1) big.textContent="Bengkel dalam "+diff+" hari";
+  else if(diff===1) big.textContent="Bengkel esok";
+  else if(diff<=0&&diff>=-2) big.textContent="Hari bengkel sedang berlangsung";
+  else big.textContent="Bengkel telah selesai";
+  if(current){ sm.textContent="Fasa semasa: "+current.querySelector("h3").childNodes[0].textContent.trim()+" ("+current.querySelector(".d").textContent+")"; }
+  else sm.textContent="";
+
+  // data kursus
+  var AJK=["Puan Suhaila binti Mohd Sauid","Dr. Husna Aini Swarno","Puan Nor Halaliza Alias","Aqilah binti Dollah","Dr. Faiznur Mohd Fuad","Ir. Dr. Iylia Idris","Dr. Nurul Fadhilah Kamalul Aripin","Dr. Rahida Wati Sharudin"];
+  var C=[
+  ["CGE410","Statics and Dynamics","Dr Husna Aini Swarno","Prof. Madya Ir. Dr. Nadiahnor Md Yusop","Dr. Nur Shahidah Ab Aziz",0],
+  ["CGE526","Petroleum Geology","Nur Shuhadah Japperi","Nur Shuhadah Japperi","Dr. Noor Fauziyah Ishak",0],
+  ["CGE545","Electrical and Instrumentation Technology","Dr. Munawar Zaman Shahruddin","Dr. Wan Zairani Wan Bakar","YM Dr. Tengku Amran Tengku Mohd",0],
+  ["CGE567","Reservoir Engineering I","Dr. Siti Nurliyana Che Mohamed Hussein","Dr. Siti Nurliyana Che Mohamed Hussein","Aqilah Dollah",1],
+  ["CGE577","Drilling Engineering I","Dr. Azreen Junaida Abd Aziz","Dr. Nurul Aimi Ghazali","Ir. Dr. Mohd Saufi Md Zaini",1],
+  ["CGE578","Drilling Engineering II","Dr. Arina Sauki","Dr. Nurul Aimi Ghazali","Dr. Nur Azrini Ramlee",1],
+  ["CGE588","Reservoir Engineering II","Dr. Suriatie Mat Yusuf","Dr. Suriatie Mat Yusuf","Dr. Mazlinda Ab Rahman",2],
+  ["CGE642","Mass and Heat Transfer of Oil and Gas Process","Ir. Dr. Mohd Saufi Md Zaini","Ir. Dr. Mohd Saufi Md Zaini","Prof. Madya Dr. Fazlena Hamzah",2],
+  ["CGE659","Petroleum Production Engineering","Dr. Rozana Azrina Sazali","Dr. Rozana Azrina Sazali","Effah Yahya",2],
+  ["CHE413","Fluid Mechanics for Chemical Engineers","Dr. Nur Azrini Ramlee","Dr. Nur Azrini Ramlee","Hanafiah Zainal Abidin",3],
+  ["CHE430/495","Organic Chemistry / Hydrocarbon Chemistry","Prof. Madya Dr. Nurul Fadhilah Kamalul Aripin","Prof. Madya Dr. Nurul Fadhilah Kamalul Aripin","Dr. Miradatul Najwa Mohd Rodhi",3],
+  ["CHE433","Thermodynamics","Fariza Hamidon","Dr. Istikamah Subuki","Dr. Norasmah Mohammed Manshor",3],
+  ["CHE434","Process Chemistry","Dr Sakinah Mohd Alauddin","Dr. Sakinah Mohd Alauddin","Dr. Shareena Fairuz Abdul Manaf",4],
+  ["CHE463","Heat Transfer","Dr. Norhasyimi Rahmat @ A Rahman","Dr. Istikamah Subuki","Dr. Norliza Ibrahim",4],
+  ["CHE471","Chemical Process Principles I","Dr. Norliza Ibrahim","Dr. Norliza Ibrahim","Dr. Istikamah Subuki",4],
+  ["CHE493","Fluid Mechanics","Dr Hossein Shahbeik","Dr. Nur Azrini Ramlee","Ts. Dr. Asdarina Yahya",5],
+  ["CHE502","Reaction Engineering I","Dr. Nor Faeqah Idrus","Dr. Hawaiah Imam Maarof","Prof. Madya Ir. Dr. Ana Najwa Mustapa",5],
+  ["CHE505","Reaction Engineering II","Ir. Dr. Norhaslinda Nasuha","Ir. Dr. Norhaslinda Nasuha","Ir. Normadyzah Ahmad",5],
+  ["CHE522","Transport Phenomena","Dr Faiznur Mohd Fuad","Dr. Noor Fauziyah Ishak","Dr. Rafeqah binti Raslan",6],
+  ["CHE531","Chemical Process Principles II","Dr. Nur Shahidah binti Ab Aziz","Prof. Madya Ir. Dr. Ana Najwa Mustapa","Prof. Madya Ir. Dr. Siti Shawalliah Idris",6],
+  ["CHE545","Mass Transfer","Ir. Dr. Norhidayah Ideris","Ir. Dr. Norhidayah Ideris","Dr. Jefri Jaapar",6],
+  ["CHE553","Chemical Engineering Thermodynamics","Dr. Norashikin Ahmad Zamanhuri","Ir. Dr. Lim Ying Pei","Dr. Zalizawati Abdullah",7],
+  ["CPE501","Chemical Process Control","Dr. Fuzieah Subari","Dr. Zalizawati Abdullah","Dr. Muhammad Syafiq Hazwan Ruslan",7]
+  ];
+  var STEPS=["Soalan lulus vetter","RP pilih 1 set dan kemas kini","Vetter tandatangan borang","Dihantar ke Pejabat Akademik"];
+  var KEY="ajk-exam-jan2027-v1", state={};
+  try{ state=JSON.parse(localStorage.getItem(KEY)||"{}")||{} }catch(e){ state={} }
+  function save(){ try{ localStorage.setItem(KEY,JSON.stringify(state)) }catch(e){} }
+
+  var sel=document.getElementById("sel"), box=document.getElementById("courses");
+  AJK.forEach(function(n,i){ var o=document.createElement("option"); o.value=i; o.textContent=n; sel.appendChild(o) });
+  sel.value=7;
+
+  function render(){
+    var idx=+sel.value; box.innerHTML="";
+    C.forEach(function(c){
+      if(c[5]!==idx) return;
+      var d=document.createElement("div"); d.className="course";
+      var done=0; STEPS.forEach(function(_,k){ if(state[c[0]+"|"+k]) done++ });
+      var h='<div class="top"><span class="code">'+c[0]+'</span><b>'+c[1]+'</b><span class="prog">'+done+'/4</span></div>';
+      h+='<div class="roles"><span>Author<b>'+c[2]+'</b></span><span>Resource Person<b>'+c[3]+'</b></span><span>Vetter<b>'+c[4]+'</b></span></div>';
+      h+='<div class="steps">';
+      STEPS.forEach(function(s,k){
+        var id="cb-"+c[0].replace(/\W/g,"")+"-"+k;
+        h+='<label for="'+id+'"><input type="checkbox" id="'+id+'" data-k="'+c[0]+'|'+k+'"'+(state[c[0]+"|"+k]?" checked":"")+'><span>'+s+'</span></label>';
+      });
+      h+='</div>';
+      d.innerHTML=h; box.appendChild(d);
+    });
+    box.querySelectorAll("input").forEach(function(cb){
+      cb.addEventListener("change",function(){
+        state[cb.dataset.k]=cb.checked; save(); render();
+      });
+    });
+  }
+  sel.addEventListener("change",render);
+  render();
+})();
+</script>
+
+<script>
+(function(){function s(){try{parent.postMessage({ajkH:Math.ceil(document.body.getBoundingClientRect().height)},"*");}catch(e){}}
+window.addEventListener("load",s);window.addEventListener("resize",s);
+new MutationObserver(s).observe(document.body,{childList:true,subtree:true,attributes:true});setInterval(s,1500);})();
+</script>
+</body>
+</html>
