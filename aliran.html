@@ -130,13 +130,21 @@ select:focus-visible,input:focus-visible{outline:3px solid var(--accent);outline
 .verify h2{color:var(--warn)}
 .verify ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px}
 
+.bppa{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:6px;padding:18px;display:flex;flex-direction:column;gap:12px}
+.bppa .bl{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.bppa .bl li{display:flex;gap:10px;align-items:flex-start;border:1px solid var(--line);border-radius:4px;padding:10px 12px;min-width:0;break-inside:avoid}
+.bppa .bl .n{font-family:var(--f-mono);font-weight:600;color:var(--accent);flex:none}
+.bppa .bl div{display:flex;flex-direction:column;gap:2px;font-size:13.5px;min-width:0}
+.bppa .bl b{font-weight:600}
+.bppa .bl span:not(.n){color:var(--muted)}
+
 @media (max-width:640px){
   .stage{grid-template-columns:1fr}
   .when{text-align:left;align-items:flex-start;flex-direction:row;gap:10px;padding:0 0 6px 28px;align-items:baseline}
   .rail{left:6px}
   .dot{left:0;top:2px}
   .card{margin-left:28px}
-  .lanes,.steps,.items,.roles{grid-template-columns:1fr}
+  .lanes,.steps,.items,.roles,.bppa .bl{grid-template-columns:1fr}
   .branches{grid-template-columns:1fr}
 }
 @media (prefers-reduced-motion:no-preference){.card{transition:border-color .2s}}
@@ -251,7 +259,7 @@ select:focus-visible,input:focus-visible{outline:3px solid var(--accent);outline
         </ul>
         <div class="ajk">
           <span class="eyebrow">Tugas AJK</span>
-          <ul><li>Tarikh akhir penghantaran kertas ke BPPA ialah 21–23 Okt (dahulu 27–28 Okt). Pastikan tiada kursus tertinggal.</li></ul>
+          <ul><li>Tarikh akhir penghantaran kertas ke BPPA ialah 21–23 Okt (dahulu 27–28 Okt). Pastikan tiada kursus tertinggal.</li><li>Semak dokumen kursus anda mengikut senarai isu penghantaran BPPA di bawah sebelum RP menghantar.</li></ul>
         </div>
       </div>
     </div>
@@ -273,6 +281,21 @@ select:focus-visible,input:focus-visible{outline:3px solid var(--accent);outline
     </div>
 
   </div>
+</section>
+
+<section class="bppa" aria-labelledby="h-bppa">
+  <h2 id="h-bppa">Semakan dokumen sebelum hantar ke BPPA</h2>
+  <p class="note">Isu penghantaran dokumen ke BPPA pada sesi 2025/4. AJK perlu semak setiap kursus sebelum RP menghantar pada 21–23 Okt.</p>
+  <ol class="bl">
+    <li><span class="n">1</span><div><b>Penulisan kod setara</b><span>Jarak pada penulisan kod setara betul. Nama kedua-dua kod kursus di muka hadapan tepat dan konsisten.</span></div></li>
+    <li><span class="n">2</span><div><b>Arahan dan teks seragam</b><span>Jarak antara baris (line spacing) seragam untuk semua arahan. Istilah piawai digunakan (contoh: perkataan Fakulti). Penomboran dan rujukan muka surat lampiran teratur.</span></div></li>
+    <li><span class="n">3</span><div><b>Kualiti cetakan</b><span>Semua dokumen dicetak dengan bersih. Tiada kesan kotoran atau tompokan dakwat yang menjejaskan kejelasan teks.</span></div></li>
+    <li><span class="n">4</span><div><b>Paparan imej di AIMS</b><span>Semak gambar dalam soalan dipaparkan dengan betul. Pada sesi lepas hanya ikon muncul di AIMS, dan ini menyukarkan cetakan semula jika berlaku masalah teknikal.</span></div></li>
+    <li><span class="n">5</span><div><b>Cop dan tandatangan vetter</b><span>Setiap dokumen mempunyai cop rasmi dan ditandatangani oleh vetter yang dilantik.</span></div></li>
+    <li><span class="n">6</span><div><b>Borang Semakan L</b><span>Gunakan Borang Semakan L (kedua-duanya).</span></div></li>
+    <li><span class="n">7</span><div><b>Borang Produk Pelanggan dan Pengakuan Staf</b><span>Setiap nama yang disenaraikan dalam Borang Produk Pelanggan disertakan bersama Borang Pengakuan Staf.</span></div></li>
+    <li><span class="n">8</span><div><b>Tatacara sampul</b><span>Semua nama dalam Borang Produk Pelanggan ditulis jelas pada sampul. Semua kertas soalan dan borang berkaitan (Borang L dan L) dalam sampul yang sama. Senarai nama pada borang selaras (tally) dengan dokumen yang dihantar.</span></div></li>
+  </ol>
 </section>
 
 <section class="panel" aria-labelledby="h-chk">
